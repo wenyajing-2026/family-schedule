@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>家庭日程</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<style>
+:root{--sundae:#B8956E;--sundae-bg:#F5EDE3;--tina:#6B8E9F;--tina-bg:#E8EEF2;--clara:#7A9E7E;--clara-bg:#E8F0E9;--shared:#A084C0;--shared-bg:#EEE8F5;--bg:#F7F8FA;--text:#1F2937;--border:#E5E7EB;--muted:#9CA3AF;--today:#6B7280}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;-webkit-text-size-adjust:100%}
+
+.top-bar{background:#fff;padding:14px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.top-bar h1{font-size:20px;font-weight:700;margin-bottom:10px}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:7px 16px;border-radius:22px;font-size:14px;font-weight:600;border:1.5px solid var(--border);cursor:pointer;background:#fff;transition:all .15s;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.chip.on{background:#111;color:#fff;border-color:#111}
+.chip[data-f="sundae"].on{background:var(--sundae);border-color:var(--sundae);color:#fff}
+.chip[data-f="tina"].on{background:var(--tina);border-color:var(--tina);color:#fff}
+.chip[data-f="clara"].on{background:var(--clara);border-color:var(--clara);color:#fff}
+.chip[data-f="shared"].on{background:var(--shared);border-color:var(--shared);color:#fff}
+
+.week-nav{display:flex;align-items:center;justify-content:center;gap:20px;padding:14px 16px;background:#fff;border-bottom:1px solid var(--border)}
+.week-nav button{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:20px;font-family:inherit;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.week-nav button:active{background:#F3F4F6}
+.week-label{font-size:16px;font-weight:700;min-width:180px;text-align:center}
+.today-btn{font-size:13px!important;width:auto!important;padding:0 16px!important;font-weight:600}
+
+/* 重要提醒 - 底部 */
+.remind-section{padding:12px 16px 24px}
+.remind-label{font-size:13px;font-weight:700;color:#B45309;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.remind-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#F59E0B;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.remind-card{background:#FFFBEB;border-radius:12px;padding:10px 12px;border:1px solid #FCD34D}
+.remind-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.rtag{display:inline-flex;align-items:center;gap:3px;padding:4px 10px;border-radius:14px;background:#fff;border:1px solid #FCD34D;font-size:13px;font-weight:500;color:#92400E}
+.rtag .x{font-size:15px;font-weight:700;color:#D97706;cursor:pointer;margin-left:2px;-webkit-tap-highlight-color:transparent}
+.add-row{display:flex;gap:6px}
+.add-row input{flex:1;padding:6px 12px;border-radius:8px;border:1px solid #FCD34D;background:#FFFBEB;font-size:13px;font-family:inherit;outline:none}
+.add-row input::placeholder{color:#D97706;opacity:.5}
+.add-row button{padding:6px 14px;border-radius:8px;border:none;background:#F59E0B;color:#fff;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
+
+/* 今天 */
+.today-section{padding:12px 16px 4px}
+.today-section .label{font-size:13px;color:#6B7280;font-weight:700;margin-bottom:8px;letter-spacing:1px}
+.today-card{background:#fff;border-radius:16px;border-left:4px solid #7CB97F;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.05)}
+.today-card .day-head{padding:14px 16px 6px;display:flex;align-items:center;justify-content:space-between}
+.today-card .day-head .dnum{font-size:17px;font-weight:800;color:#374151}
+.today-card .tags-area{padding:6px 12px 12px;display:flex;flex-wrap:wrap;gap:6px}
+.today-card .no-ev{padding:14px;font-size:15px;color:var(--muted);text-align:center}
+
+/* 事件标签 */
+.tag{display:inline-flex;align-items:center;gap:3px;padding:6px 11px;border-radius:20px;font-size:14px;font-weight:600;line-height:1.3}
+.tag.sundae{background:var(--sundae-bg);color:#8B6914}
+.tag.tina{background:var(--tina-bg);color:#3D6B80}
+.tag.clara{background:var(--clara-bg);color:#3D6B47}
+.tag.shared{background:var(--shared-bg);color:#6B4FA0}
+.tag .x{font-size:15px;font-weight:700;opacity:.4;cursor:pointer;margin-left:2px;line-height:1;-webkit-tap-highlight-color:transparent}
+.tag .x:active{opacity:1}
+.tag.hidden{display:none}
+
+/* 未来几天 */
+.future-section{padding:8px 16px}
+.future-section .label{font-size:13px;color:var(--muted);font-weight:600;margin:8px 0 6px;letter-spacing:.5px}
+.day-card{background:#fff;border-radius:14px;border:1.5px solid var(--border);margin-bottom:8px;overflow:hidden}
+.day-card .day-head{padding:10px 14px 4px;display:flex;align-items:center;justify-content:space-between}
+.day-card .day-head .dnum{font-size:14px;font-weight:700}
+.day-card .tags-area{padding:4px 10px 10px;display:flex;flex-wrap:wrap;gap:5px}
+.day-card .no-ev{padding:4px 14px 8px;font-size:13px;color:var(--muted)}
+
+/* 过去 */
+.past-section{padding:8px 16px}
+.past-section .label{font-size:13px;color:var(--muted);font-weight:600;margin:12px 0 6px;letter-spacing:.5px}
+.day-card.past{opacity:.45;background:#F3F4F6;border-color:#D1D5DB}
+.day-card.past .day-head .dnum{color:#9CA3AF}
+.tag.past-tag{background:#E5E7EB;color:#9CA3AF;font-size:13px;padding:4px 9px;border-radius:16px;font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+<h1>🏠 家庭日程</h1>
+<div class="filter-row">
+<button class="chip on" data-f="all" onclick="filter('all')">全部</button>
+<button class="chip" data-f="sundae" onclick="filter('sundae')">🦊 Sundae</button>
+<button class="chip" data-f="tina" onclick="filter('tina')">🐰 悠悠</button>
+<button class="chip" data-f="clara" onclick="filter('clara')">👩 Clara</button>
+<button class="chip" data-f="shared" onclick="filter('shared')">🌟 全家</button>
+</div>
+</div>
+
+<div class="week-nav">
+<button onclick="prevWeek()">◀</button>
+<span class="week-label" id="weekLabel"></span>
+<button onclick="nextWeek()">▶</button>
+<button class="today-btn" onclick="goToday()">今天</button>
+</div>
+
+<div id="content"></div>
+<div id="remindArea"></div>
+
+<script>
+const WEEKDAYS=['日','一','二','三','四','五','六'];
+let weekStart=getWeekStart(new Date());
+let currentFilter='all';
+
+function getWeekStart(d){const r=new Date(d);r.setDate(r.getDate()-r.getDay());r.setHours(0,0,0,0);return r}
+function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+
+const EVENTS={
+"2026-04-19":[{who:"shared",time:"15:00",content:"Sundae特训班 15:00-20:00"},{who:"shared",time:"19:00",content:"青悠华为排练 19:00"}],
+"2026-04-20":[{who:"clara",time:"12:45",content:"去佐敦吃午餐"},{who:"clara",time:"15:00",content:"生产力促进局会议（HKPC Building）"},{who:"sundae",time:"14:00",content:"Sundae合唱表演 14:00-21:00"},{who:"tina",time:"19:00",content:"悠悠Ara课程"}],
+"2026-04-21":[{who:"clara",time:"14:30",content:"金管局 14:30-15:00"},{who:"sundae",time:"19:00",content:"Sundae Ara课程"},{who:"tina",time:"19:00",content:"悠悠Ara课程"}],
+"2026-04-22":[{who:"clara",time:"10:00",content:"北都大学城调研（陈月明）10:00-13:00"},{who:"shared",time:"19:00",content:"舞蹈私教 19:00-20:30"}],
+"2026-04-23":[{who:"shared",time:"19:00",content:"舞蹈私教 19:00-20:30"}],
+"2026-04-24":[{who:"clara",time:"09:00",content:"全量大学城调研-香港大学王于渐 09:00-10:30"},{who:"shared",time:"19:00",content:"舞蹈私教 19:00-20:30"},{who:"tina",time:"19:00",content:"悠悠Nadiaa课程 19:00-19:30"},{who:"sundae",time:"19:30",content:"Sundae Nadiaa课程 19:30-20:00"}],
+"2026-04-25":[{who:"shared",time:"09:00",content:"青悠合唱 09:00-12:30"},{who:"sundae",time:"16:00",content:"Sundae前海少C 16:00-19:00"}],
+"2026-04-26":[{who:"shared",time:"13:00",content:"青悠舞蹈 13:00-15:00"},{who:"sundae",time:"16:00",content:"Sundae特训班 16:00-20:00"},{who:"tina",time:"19:00",content:"悠悠科技馆演出准备 19:00-19:30"}],
+"2026-04-27":[{who:"clara",time:"09:30",content:"TINA华为表演 09:30-22:30"},{who:"clara",time:"13:30",content:"北都大学城-香港科技大学调研 13:30-14:00"},{who:"sundae",time:"19:00",content:"Sundae Ara课程 19:00-19:25"},{who:"tina",time:"19:25",content:"悠悠Ara课程 19:25"}],
+"2026-04-28":[],
+"2026-04-29":[{who:"shared",time:"14:00",content:"洗牙 14:00-15:30"}],
+"2026-04-30":[{who:"shared",time:"18:00",content:"舞蹈私教 18:00-20:00"}],
+"2026-05-01":[{who:"shared",time:"18:00",content:"舞蹈私教 18:00-20:00"},{who:"shared",time:"19:00",content:"舞蹈私教 19:00-20:30"},{who:"tina",time:"19:00",content:"悠悠Nadiaa课程 19:00-19:30"},{who:"sundae",time:"19:30",content:"Sundae Nadiaa课程 19:30-20:00"},{who:"clara",time:"21:00",content:"线上家长会 21:00"}],
+"2026-05-02":[{who:"shared",time:"09:00",content:"青悠合唱 09:00-12:30"},{who:"sundae",time:"16:00",content:"Sundae前海少C 16:00-19:00"}],
+"2026-05-03":[{who:"shared",time:"13:00",content:"青悠舞蹈 13:00-15:00"},{who:"sundae",time:"16:00",content:"Sundae特训班 16:00-20:00"}],
+"2026-05-04":[{who:"tina",time:"10:00",content:"悠悠科技馆演出 10:00-15:00"},{who:"sundae",time:"19:05",content:"Sundae Ara课程 19:05-19:25"},{who:"tina",time:"19:25",content:"悠悠Ara课程 19:25"}],
+"2026-05-05":[{who:"tina",time:"19:05",content:"悠悠Ara课程 19:05-19:25"},{who:"sundae",time:"19:10",content:"Sundae Ara课程 19:10-19:30"}],
+"2026-05-06":[{who:"shared",time:"19:00",content:"舞蹈私教 19:00-20:30"}],
+"2026-05-07":[{who:"shared",time:"18:00",content:"舞蹈私教 18:00-20:00"},{who:"shared",time:"19:00",content:"舞蹈私教 19:00-20:30"}],
+"2026-05-08":[{who:"tina",time:"19:00",content:"悠悠Nadiaa课程 19:00-19:30"},{who:"sundae",time:"19:30",content:"Sundae Nadiaa课程 19:30-20:00"}],
+"2026-05-09":[{who:"shared",time:"09:00",content:"青悠合唱 09:00-12:30"},{who:"sundae",time:"16:00",content:"Sundae前海少C 16:00-19:30"}],
+"2026-05-10":[{who:"shared",time:"13:00",content:"青悠舞蹈"},{who:"sundae",time:"16:00",content:"Sundae特训班"}],
+"2026-05-11":[{who:"sundae",time:"19:00",content:"Sundae Ara课程"},{who:"tina",time:"19:00",content:"悠悠Ara课程"}],
+"2026-05-12":[{who:"tina",time:"19:00",content:"悠悠Ara课程"},{who:"sundae",time:"19:00",content:"Sundae Ara课程"},{who:"clara",time:"10:00",content:"北都大学城调研（陈月明）"}],
+"2026-05-14":[{who:"shared",time:"18:00",content:"舞蹈私教"},{who:"shared",time:"19:00",content:"舞蹈私教"}],
+"2026-05-15":[{who:"tina",time:"19:00",content:"青悠Nadiaa课程"},{who:"sundae",time:"19:30",content:"Sundae Nadiaa课程"}],
+"2026-05-16":[{who:"shared",time:"09:00",content:"青悠合唱"},{who:"sundae",time:"16:00",content:"Sundae前海少C"}]
+};
+
+// 删除功能
+const DEL_KEY='deleted_events_v1';
+function getDeleted(){try{return JSON.parse(localStorage.getItem(DEL_KEY))||[]}catch(e){return[]}}
+function saveDeleted(arr){localStorage.setItem(DEL_KEY,JSON.stringify(arr))}
+function delEvent(date,time,content){const arr=getDeleted();arr.push(date+'|'+time+'|'+content);saveDeleted(arr);render()}
+function isDel(date,time,content){return getDeleted().includes(date+'|'+time+'|'+content)}
+
+function render(){
+const today=new Date();today.setHours(0,0,0,0);
+const s=weekStart,e=new Date(weekStart);e.setDate(e.getDate()+6);
+document.getElementById('weekLabel').textContent=(s.getMonth()+1)+'/'+s.getDate()+' — '+(e.getMonth()+1)+'/'+e.getDate();
+
+let todayHtml='';
+let futureHtml='';
+let pastHtml='';
+
+for(let i=0;i<7;i++){
+const d=new Date(weekStart);d.setDate(d.getDate()+i);
+const ds=fmt(d),isToday=d.toDateString()===today.toDateString(),isPast=d<today&&!isToday;
+const allEvs=(EVENTS[ds]||[]).slice().sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+const evs=allEvs.filter(ev=>!isDel(ds,ev.time,ev.content));
+const wk=WEEKDAYS[d.getDay()];
+const empty=evs.length===0;
+const dateStr=(d.getMonth()+1)+'月'+d.getDate()+'日 周'+wk;
+
+if(isPast){
+pastHtml+='<div class="day-card past">';
+pastHtml+='<div class="day-head"><span class="dnum">'+dateStr+'</span></div>';
+if(evs.length){
+pastHtml+='<div class="tags-area">';
+evs.forEach(ev=>{
+pastHtml+='<span class="tag past-tag">'+ev.time+' '+ev.content+'</span>';
+});
+pastHtml+='</div>';
+}else{
+pastHtml+='<div class="no-ev">无安排</div>';
+}
+pastHtml+='</div>';
+continue;
+}
+
+if(isToday){
+todayHtml+='<div class="today-section"><div class="label">📍 今天</div><div class="today-card">';
+todayHtml+='<div class="day-head"><span class="dnum">'+dateStr+'</span></div>';
+if(evs.length){
+todayHtml+='<div class="tags-area">';
+evs.forEach(ev=>{
+const hidden=currentFilter!=='all'&&ev.who!==currentFilter;
+todayHtml+='<span class="tag '+ev.who+(hidden?' hidden':'')+'" data-w="'+ev.who+'">'+ev.time+' '+ev.content+'<span class="x" onclick="delEvent(\''+ds+'\',\''+ev.time+'\',\''+ev.content.replace(/'/g,"\\'")+'\')">×</span></span>';
+});
+todayHtml+='</div>';
+}else{
+todayHtml+='<div class="no-ev">🎉 今天没有安排</div>';
+}
+todayHtml+='</div></div>';
+}else{
+futureHtml+='<div class="day-card">';
+futureHtml+='<div class="day-head"><span class="dnum">'+dateStr+'</span></div>';
+if(evs.length){
+futureHtml+='<div class="tags-area">';
+evs.forEach(ev=>{
+const hidden=currentFilter!=='all'&&ev.who!==currentFilter;
+futureHtml+='<span class="tag '+ev.who+(hidden?' hidden':'')+'" data-w="'+ev.who+'">'+ev.time+' '+ev.content+'<span class="x" onclick="delEvent(\''+ds+'\',\''+ev.time+'\',\''+ev.content.replace(/'/g,"\\'")+'\')">×</span></span>';
+});
+futureHtml+='</div>';
+}else{
+futureHtml+='<div class="no-ev">无安排</div>';
+}
+futureHtml+='</div>';
+}
+}
+
+let html=todayHtml;
+if(futureHtml)html+='<div class="future-section"><div class="label">📅 近几日</div>'+futureHtml+'</div>';
+if(pastHtml)html+='<div class="past-section"><div class="label">📋 已过</div>'+pastHtml+'</div>';
+document.getElementById('content').innerHTML=html;
+}
+
+function filter(who){currentFilter=who;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.f===who));document.querySelectorAll('.tag[data-w]').forEach(e=>e.classList.toggle('hidden',who!=='all'&&e.dataset.w!==who))}
+function prevWeek(){weekStart.setDate(weekStart.getDate()-7);render()}
+function nextWeek(){weekStart.setDate(weekStart.getDate()+7);render()}
+function goToday(){weekStart=getWeekStart(new Date());render()}
+
+// 重要提醒
+const REMIND_KEY='remind_items_v1';
+function getReminds(){try{return JSON.parse(localStorage.getItem(REMIND_KEY))||[]}catch(e){return[]}}
+function saveReminds(arr){localStorage.setItem(REMIND_KEY,JSON.stringify(arr))}
+function renderReminds(){
+const items=getReminds().filter(r=>!r.done);
+const area=document.getElementById('remindArea');
+let h='<div class="remind-section">';
+h+='<div class="remind-label">'+(items.length?'<span class="remind-dot"></span>':'')+'⚠️ 重要提醒</div>';
+h+='<div class="remind-card">';
+if(items.length){
+h+='<div class="remind-tags">';
+items.forEach((r,i)=>{h+='<span class="rtag">'+r.text+'<span class="x" onclick="delRemind('+i+')">×</span></span>'});
+h+='</div>';
+}
+h+='<div class="add-row"><input id="remindInput" placeholder="添加提醒..." onkeydown="if(event.key===\'Enter\')addRemind()"><button onclick="addRemind()">添加</button></div>';
+h+='</div></div>';
+area.innerHTML=h;
+}
+function addRemind(){const inp=document.getElementById('remindInput');if(!inp||!inp.value.trim())return;const arr=getReminds();arr.push({text:inp.value.trim(),done:false});saveReminds(arr);renderReminds()}
+function delRemind(idx){const arr=getReminds().filter(r=>!r.done);const target=arr[idx];const all=getReminds();const i=all.findIndex(a=>a.text===target.text&&!a.done);if(i>=0){all.splice(i,1);saveReminds(all)}renderReminds()}
+
+renderReminds();
+render();
+</script>
+</body>
+</html>
