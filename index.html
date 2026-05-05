@@ -8,7 +8,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <style>
-:root{--sundae:#B8956E;--sundae-bg:#F5EDE3;--tina:#6B8E9F;--tina-bg:#E8EEF2;--clara:#7A9E7E;--clara-bg:#E8F0E9;--shared:#A084C0;--shared-bg:#EEE8F5;--bg:#F7F8FA;--text:#1F2937;--border:#E5E7EB;--muted:#9CA3AF;--today:#6B7280}
+:root{--sundae:#B8956E;--sundae-bg:#F5EDE3;--tina:#6B8E9F;--tina-bg:#E8EEF2;--clara:#7A9E7E;--clara-bg:#E8F0E9;--shared:#A084C0;--shared-bg:#EEE8F5;--jms:#C07FD9;--jms-bg:#F3E8FC;--bg:#F7F8FA;--text:#1F2937;--border:#E5E7EB;--muted:#9CA3AF;--today:#6B7280}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;-webkit-text-size-adjust:100%}
 
@@ -17,6 +17,7 @@ body{font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;backgro
 .filter-row{display:flex;gap:8px;flex-wrap:wrap}
 .chip{padding:7px 16px;border-radius:22px;font-size:14px;font-weight:600;border:1.5px solid var(--border);cursor:pointer;background:#fff;transition:all .15s;font-family:inherit;-webkit-tap-highlight-color:transparent}
 .chip.on{background:#111;color:#fff;border-color:#111}
+.chip[data-f="jms"].on{background:var(--jms);border-color:var(--jms);color:#fff}
 .chip[data-f="sundae"].on{background:var(--sundae);border-color:var(--sundae);color:#fff}
 .chip[data-f="tina"].on{background:var(--tina);border-color:var(--tina);color:#fff}
 .chip[data-f="clara"].on{background:var(--clara);border-color:var(--clara);color:#fff}
@@ -57,6 +58,7 @@ body{font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;backgro
 .tag.tina{background:var(--tina-bg);color:#3D6B80}
 .tag.clara{background:var(--clara-bg);color:#3D6B47}
 .tag.shared{background:var(--shared-bg);color:#6B4FA0}
+.tag.jms{background:var(--jms-bg);color:#7B3FA8}
 .tag .x{font-size:15px;font-weight:700;opacity:.4;cursor:pointer;margin-left:2px;line-height:1;-webkit-tap-highlight-color:transparent}
 .tag .x:active{opacity:1}
 .tag.hidden{display:none}
@@ -86,7 +88,7 @@ body{font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;backgro
 <button class="chip on" data-f="all" onclick="filter('all')">全部</button>
 <button class="chip" data-f="sundae" onclick="filter('sundae')">🦊 Sundae</button>
 <button class="chip" data-f="tina" onclick="filter('tina')">🐰 悠悠</button>
-<button class="chip" data-f="jms" onclick="filter('jms')">👭 姐妹</button>
+<button class="chip" data-f="jms" onclick="filter('jms')">🟣 姐妹</button>
 <button class="chip" data-f="clara" onclick="filter('clara')">👩 Clara</button>
 <button class="chip" data-f="shared" onclick="filter('shared')">🌟 全家</button>
 </div>
@@ -114,36 +116,36 @@ const EVENTS={
 "2026-04-19":[{who:"shared",time:"15:00",content:"Sundae特训班 15:00-20:00"},{who:"shared",time:"19:00",content:"青悠华为排练 19:00"}],
 "2026-04-20":[{who:"clara",time:"12:45",content:"去佐敦吃午餐"},{who:"clara",time:"15:00",content:"生产力促进局会议（HKPC Building）"},{who:"sundae",time:"14:00",content:"Sundae合唱表演 14:00-21:00"},{who:"tina",time:"19:00",content:"悠悠Ara课程"}],
 "2026-04-21":[{who:"clara",time:"14:30",content:"金管局 14:30-15:00"},{who:"sundae",time:"19:00",content:"Sundae Ara课程"},{who:"tina",time:"19:00",content:"悠悠Ara课程"}],
-"2026-04-22":[{who:"clara",time:"10:00",content:"北都大学城调研（陈月明）10:00-13:00"},{who:"shared",time:"19:00",content:"舞蹈私教 19:00-20:30"}],
-"2026-04-23":[{who:"shared",time:"18:00",content:"歌剧舞剧院舞蹈"}],
-"2026-04-24":[{who:"clara",time:"09:00",content:"全量大学城调研-香港大学王于渐 09:00-10:30"},{who:"shared",time:"19:00",content:"舞蹈私教 19:00-20:30"},{who:"tina",time:"19:00",content:"悠悠Nadiaa课程 19:00-19:30"},{who:"sundae",time:"19:30",content:"Sundae Nadiaa课程 19:30-20:00"}],
-"2026-04-25":[{who:"shared",time:"09:00",content:"青悠合唱 09:00-12:30"},{who:"sundae",time:"16:00",content:"Sundae前海少C 16:00-19:00"}],
+"2026-04-22":[{who:"clara",time:"10:00",content:"北都大学城调研（陈月明）10:00-13:00"},{who:"jms",time:"19:00",content:"姐妹舞蹈私教 19:00-20:30"}],
+"2026-04-23":[{who:"jms",time:"18:00",content:"歌剧舞剧院舞蹈"}],
+"2026-04-24":[{who:"clara",time:"09:00",content:"全量大学城调研-香港大学王于渐 09:00-10:30"},{who:"jms",time:"19:00",content:"姐妹舞蹈私教 19:00-20:30"},{who:"tina",time:"19:00",content:"悠悠Nadiaa课程 19:00-19:30"},{who:"sundae",time:"19:30",content:"Sundae Nadiaa课程 19:30-20:00"}],
+"2026-04-25":[{who:"tina",time:"09:00",content:"青悠合唱 09:00-12:30"},{who:"sundae",time:"16:00",content:"Sundae前海少C 16:00-19:00"}],
 "2026-04-26":[{who:"shared",time:"13:00",content:"青悠舞蹈 13:00-15:00"},{who:"sundae",time:"16:00",content:"Sundae特训班 16:00-20:00"},{who:"tina",time:"19:00",content:"悠悠科技馆演出准备 19:00-19:30"}],
 "2026-04-27":[{who:"clara",time:"09:30",content:"TINA华为表演 09:30-22:30"},{who:"clara",time:"13:30",content:"北都大学城-香港科技大学调研 13:30-14:00"},{who:"sundae",time:"19:00",content:"Sundae Ara课程 19:00-19:25"},{who:"tina",time:"19:25",content:"悠悠Ara课程 19:25"}],
 "2026-04-28":[],
 "2026-04-29":[{who:"shared",time:"14:00",content:"洗牙 14:00-15:30"}],
-"2026-04-30":[{who:"shared",time:"18:00",content:"歌剧舞剧院舞蹈"}],
-"2026-05-01":[{who:"shared",time:"18:00",content:"舞蹈私教 18:00-20:00"},{who:"shared",time:"19:00",content:"舞蹈私教 19:00-20:30"},{who:"tina",time:"19:00",content:"悠悠Nadiaa课程 19:00-19:30"},{who:"sundae",time:"19:30",content:"Sundae Nadiaa课程 19:30-20:00"},{who:"clara",time:"21:00",content:"线上家长会 21:00"}],
-"2026-05-02":[{who:"shared",time:"09:00",content:"青悠合唱 09:00-12:30"},{who:"sundae",time:"16:00",content:"Sundae前海少C 16:00-19:00"}],
+"2026-04-30":[{who:"jms",time:"18:00",content:"歌剧舞剧院舞蹈"}],
+"2026-05-01":[{who:"jms",time:"18:00",content:"姐妹舞蹈私教 18:00-20:00"},{who:"jms",time:"19:00",content:"姐妹舞蹈私教 19:00-20:30"},{who:"tina",time:"19:00",content:"悠悠Nadiaa课程 19:00-19:30"},{who:"sundae",time:"19:30",content:"Sundae Nadiaa课程 19:30-20:00"},{who:"clara",time:"21:00",content:"线上家长会 21:00"}],
+"2026-05-02":[{who:"tina",time:"09:00",content:"青悠合唱 09:00-12:30"},{who:"sundae",time:"16:00",content:"Sundae前海少C 16:00-19:00"}],
 "2026-05-03":[{who:"shared",time:"13:00",content:"青悠舞蹈 13:00-15:00"},{who:"sundae",time:"16:00",content:"Sundae特训班 16:00-20:00"}],
 "2026-05-04":[{who:"tina",time:"10:00",content:"悠悠科技馆演出 10:00-15:00"},{who:"sundae",time:"19:05",content:"Sundae Ara课程 19:05-19:25"},{who:"tina",time:"19:25",content:"悠悠Ara课程 19:25"}],
 "2026-05-05":[{who:"tina",time:"19:05",content:"悠悠Ara课程 19:05-19:25"},{who:"sundae",time:"19:10",content:"Sundae Ara课程 19:10-19:30"}],
-"2026-05-06":[{who:"shared",time:"19:00",content:"舞蹈私教 19:00-20:30"}],
-"2026-05-07":[{who:"clara",time:"15:00",content:"孙东局长会议"},{who:"shared",time:"18:00",content:"歌剧舞剧院舞蹈"}],
+"2026-05-06":[{who:"jms",time:"19:00",content:"姐妹舞蹈私教 19:00-20:30"}],
+"2026-05-07":[{who:"clara",time:"15:00",content:"孙东局长会议"},{who:"jms",time:"18:00",content:"歌剧舞剧院舞蹈"}],
 "2026-05-08":[{who:"tina",time:"19:00",content:"悠悠Nadiaa课程 19:00-19:30"},{who:"sundae",time:"19:30",content:"Sundae Nadiaa课程 19:30-20:00"}],
-"2026-05-09":[{who:"shared",time:"09:00",content:"青悠合唱 09:00-12:30"},{who:"sundae",time:"16:00",content:"Sundae前海少C 16:00-19:30"}],
+"2026-05-09":[{who:"tina",time:"09:00",content:"青悠合唱 09:00-12:30"},{who:"sundae",time:"16:00",content:"Sundae前海少C 16:00-19:30"}],
 "2026-05-10":[{who:"shared",time:"13:00",content:"青悠舞蹈"},{who:"sundae",time:"16:00",content:"Sundae特训班"}],
 "2026-05-11":[{who:"sundae",time:"19:00",content:"Sundae Ara课程"},{who:"tina",time:"19:00",content:"悠悠Ara课程"}],
 "2026-05-12":[{who:"clara",time:"15:00",content:"调研恒生大学"},{who:"tina",time:"19:00",content:"悠悠Ara课程"},{who:"sundae",time:"19:00",content:"Sundae Ara课程"}],
-"2026-05-14":[{who:"shared",time:"18:00",content:"歌剧舞剧院舞蹈"}],
+"2026-05-14":[{who:"jms",time:"18:00",content:"歌剧舞剧院舞蹈"}],
 "2026-05-15":[{who:"tina",time:"19:00",content:"青悠Nadiaa课程"},{who:"sundae",time:"19:30",content:"Sundae Nadiaa课程"}],
-"2026-05-16":[{who:"shared",time:"09:00",content:"青悠合唱"},{who:"sundae",time:"16:00",content:"Sundae前海少C"}],
-"2026-05-21":[{who:"shared",time:"18:00",content:"歌剧舞剧院舞蹈"}],
-"2026-05-28":[{who:"shared",time:"18:00",content:"歌剧舞剧院舞蹈"}],
-"2026-06-04":[{who:"shared",time:"18:00",content:"歌剧舞剧院舞蹈"}],
-"2026-06-11":[{who:"shared",time:"18:00",content:"歌剧舞剧院舞蹈"}],
-"2026-06-18":[{who:"shared",time:"18:00",content:"歌剧舞剧院舞蹈"}],
-"2026-06-25":[{who:"shared",time:"18:00",content:"歌剧舞剧院舞蹈"}],
+"2026-05-16":[{who:"tina",time:"09:00",content:"青悠合唱"},{who:"sundae",time:"16:00",content:"Sundae前海少C"}],
+"2026-05-21":[{who:"jms",time:"18:00",content:"歌剧舞剧院舞蹈"}],
+"2026-05-28":[{who:"jms",time:"18:00",content:"歌剧舞剧院舞蹈"}],
+"2026-06-04":[{who:"jms",time:"18:00",content:"歌剧舞剧院舞蹈"}],
+"2026-06-11":[{who:"jms",time:"18:00",content:"歌剧舞剧院舞蹈"}],
+"2026-06-18":[{who:"jms",time:"18:00",content:"歌剧舞剧院舞蹈"}],
+"2026-06-25":[{who:"jms",time:"18:00",content:"歌剧舞剧院舞蹈"}],
 "2026-06-27":[{who:"clara",time:"08:30",content:"工业总会2026会议（珠海）"}],
 };
 
@@ -225,7 +227,7 @@ if(pastHtml)html+='<div class="past-section"><div class="label">📋 已过</div
 document.getElementById('content').innerHTML=html;
 }
 
-function filter(who){currentFilter=who;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.f===who));document.querySelectorAll('.tag[data-w]').forEach(e=>{if(who==='all'){e.classList.remove('hidden')}else if(who==='jms'){e.classList.toggle('hidden',e.dataset.w!=='tina'&&e.dataset.w!=='sundae')}else{e.classList.toggle('hidden',e.dataset.w!==who)}})}
+function filter(who){currentFilter=who;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.f===who));document.querySelectorAll('.tag[data-w]').forEach(e=>{if(who==='all'){e.classList.remove('hidden')}else if(who==='jms'){e.classList.toggle('hidden',e.dataset.w!=='jms')}else{e.classList.toggle('hidden',e.dataset.w!==who)}})}
 function prevWeek(){weekStart.setDate(weekStart.getDate()-7);render()}
 function nextWeek(){weekStart.setDate(weekStart.getDate()+7);render()}
 function goToday(){weekStart=getWeekStart(new Date());render()}
